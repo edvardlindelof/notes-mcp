@@ -1,0 +1,9 @@
+[project]
+name = "notes-mcp"
+version = "0.1.0"
+description = "MCP for managing markdown notes with YAML frontmatter"
+requires-python = ">= 3.13"
+dependencies = [
+    "fastmcp>=2.12.3",
+    "pyyaml>=6.0.2",
+]
