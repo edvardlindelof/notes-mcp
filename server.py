@@ -1,3 +1,4 @@
+import re
 import yaml
 import argparse
 from pathlib import Path
@@ -20,8 +21,12 @@ def read(path: str) -> str:
 @mcp.tool()
 def write(path: str, yaml_frontmatter: str, markdown_content: str) -> str:
     """Write a note file with YAML frontmatter and markdown content."""
-    yaml.safe_load(yaml_frontmatter)  # validate YAML
-    (root_dir / path).write_text(f"---\n{yaml_frontmatter}\n---\n{markdown_content}")
+    match_yaml = re.match(r"---\n(.*?)\n---", yaml_frontmatter, re.DOTALL)
+    if not match_yaml:
+        raise ValueError(r"YAML frontmatter doesn't match '---\n(.*)\n---'")
+    yaml.safe_load(match_yaml.group(1))  # validate
+
+    (root_dir / path).write_text(f"{yaml_frontmatter}\n{markdown_content}")
     return f"File written: {path}"
 
 @mcp.tool()
