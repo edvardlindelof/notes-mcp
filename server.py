@@ -61,7 +61,7 @@ def search(query: list[str], path: str = ".", in_markdown: bool = False) -> list
     """
     files_content = (
         (str(p), p.read_text().lower().split("---", 2))
-        for p in (root_dir / path).rglob("*") if p.is_file()
+        for p in (root_dir / path).rglob("*.md") if p.is_file()
     )
     return [
         p for p, (_, yaml_part, md_part) in files_content
