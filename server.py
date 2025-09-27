@@ -65,8 +65,8 @@ def search(query: list[str], path: str = ".", in_markdown: bool = False) -> list
     )
     return [
         p for p, (_, yaml_part, md_part) in files_content
-        if any(q in yaml_part for q in query)
-        or (in_markdown and any(q in md_part for q in query))
+        if any(q.lower() in yaml_part for q in query)
+        or (in_markdown and any(q.lower() in md_part for q in query))
     ]
 
 
