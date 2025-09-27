@@ -70,4 +70,9 @@ def search(query: list[str], path: str = ".", in_markdown: bool = False) -> list
     ]
 
 
-mcp.run()
+def main() -> None:
+    mcp.run()
+
+
+if __name__ == "__main__":
+    main()
