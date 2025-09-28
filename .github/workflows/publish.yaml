@@ -12,13 +12,13 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           version: "0.8.22"
-      - name: extract version from git tag
-        run: |
+      - run: |
           version=$(echo ${{ github.ref }} | grep -oP '(?<=refs/tags/v).*')
           echo "version=$version" >> "$GITHUB_ENV"
       - run: echo $version
-      - name: set version in pyproject.yaml
+      - name: Set version in pyproject.yaml
         run: |
           uvx --from=toml-cli@0.8.2 toml set \
             --toml-path=pyproject.toml project.version $version
-      - run: cat pyproject.toml
+      - run: uv build
+      - run: uv publish
