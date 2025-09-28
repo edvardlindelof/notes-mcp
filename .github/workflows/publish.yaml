@@ -16,6 +16,6 @@ jobs:
           version=$(echo ${{ github.ref }} | grep -oP '(?<=refs/tags/v).*')
           echo "version=$version" >> "$GITHUB_ENV"
       - run: |
-          uvx --from=toml-cli@0.8.2 toml set
-          --toml-path=pyproject.toml project.version $version
+          uvx --from=toml-cli@0.8.2 toml set \
+            --toml-path=pyproject.toml project.version $version
       - run: ls
