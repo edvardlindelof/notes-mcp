@@ -11,7 +11,7 @@ Having metadata associated with the notes is useful for various things, such as 
 ## Tool usage and model context protocol (MCP)
 *Tool usage* is the concept of having an LLM call programming functions when they receive input that warrants it.
 
-<img src="images/meetup-attendance-update.png" alt="Asking Claude to update notes based on email content." width="85%">
+<img src="images/meetup-attendance-update.png" width="85%">
 
 The [*model context protocol*](https://modelcontextprotocol.io/docs/getting-started/intro) is a standard whose main purpose is to define conventions for how tool usage should be implemented.
 
@@ -35,9 +35,9 @@ def mkdir(path: str) -> str:
 ```
 
 ### Q: shouldn't there be an operation for moving files?
-A: there could be, but it is not needed, because the LLM is flexible enough to figure out the workaround.
+A: there could be, but it is not needed, because the LLM is flexible enough to figure out the workaround (read -> write -> delete).
 
-TODO screenshot of rm/write
+<img src="images/move-attendance-list.png" width="85%">
 
 This is a small example of how tool server implementation lends itself to *minimalism* - you typically don't have to implement every conceived tool to achieve tangible value within your business context!
 
