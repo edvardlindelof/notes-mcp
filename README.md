@@ -11,7 +11,7 @@ Having metadata associated with the notes is useful for various things, such as 
 ## Tool usage and model context protocol (MCP)
 *Tool usage* is the concept of having an LLM call programming functions when they receive input that warrants it.
 
-<img src="images/meetup-attendance-update.png" alt="Asking Claude to update notes based on email content." width="500">
+<img src="images/meetup-attendance-update.png" alt="Asking Claude to update notes based on email content." width="600">
 
 The [*model context protocol*](https://modelcontextprotocol.io/docs/getting-started/intro) is a standard whose main purpose is to define conventions for how tool usage should be implemented.
 
