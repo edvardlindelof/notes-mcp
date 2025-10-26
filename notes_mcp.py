@@ -52,7 +52,6 @@ def rmdir(path: str) -> str:
     (root_dir / path).rmdir()
     return f"Directory removed: {path}"
 
-# TODO consider extending and optimizing
 @mcp.tool()
 def search(query: list[str], path: str = ".", in_markdown: bool = False) -> list[str]:
     """Search for text in YAML frontmatter, and optionally in markdown content.

@@ -11,13 +11,13 @@ Having metadata associated with the notes is useful for various things, such as 
 ## Tool usage and model context protocol (MCP)
 *Tool usage* is the concept of having an LLM call programming functions when they receive input that warrants it.
 
-TODO screenshot of TLDR usage with Gmail + notes-mcp
+![Asking Claude to update notes based on email content.](images/meetup-attendance-update.png)
 
 The [*model context protocol*](https://modelcontextprotocol.io/docs/getting-started/intro) is a standard whose main purpose is to define conventions for how tool usage should be implemented.
 
 Some interesting aspects of LLM tool usage are
 - **instant integration**: by activating multiple tool servers, you make your chat bot an integration interface betwen them.
-- **flexibility and minimalism**: because the LLM handles the inputs and outputs of the tool usage, it is very flexible, enabling high value from few tools.
+- **flexibility and minimalism**: because the LLM handles the inputs and outputs of the tool usage, it is very flexible often able to deliver high value with a small number of tools.
 - **reverse delegation of work to the LLM**: tools do work for LLMs, but also define expected input in their documentation, allowing them to "fool" the LLM to do the work when appropriate.
 
 You saw an example of instant integration, of Gmail and notes-mcp, in the screenshot above.
