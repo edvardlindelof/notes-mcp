@@ -1,68 +1,31 @@
 # Notes MCP server
-A simple MCP server for chat bot/human collaborative management of text content.
+A simple MCP server for chatbot/human collaborative management of text content.
+
+Content files, *notes*, are stored as markdown files with YAML frontmatter, a format commonly used to [organize blog posts](https://jekyllrb.com/docs/front-matter/).
+Having metadata associated with the notes is useful for various things, such as timestamping and searchability.
 
 I use the server as
 1. a means to improve my own own productivity, through management of blog content, general notes and other things.
 2. a demo project, for showing and reasoning about the capabilities of LLM tool usage.
 
-Content files, *notes*, are stored as markdown files with YAML frontmatter, a format commonly used to [organize blog posts](https://jekyllrb.com/docs/front-matter/).
-Having metadata associated with the notes is useful for various things, such as timestamping and searchability.
-
 ## Tool usage and model context protocol (MCP)
-*Tool usage* is the concept of having an LLM call programming functions when they receive input that warrants it.
+*Tool usage* is the concept of having an LLM invoke software functions when they receive input that warrants it.
+The [*model context protocol*](https://modelcontextprotocol.io/docs/getting-started/intro) is a standard whose main purpose is to define conventions for how tool usage should be implemented.
+Here is an example of the present MCP server in action, in conjunction with an official Gmail tool server:
 
 <img src="images/meetup-attendance-update.png" width="85%">
 
-The [*model context protocol*](https://modelcontextprotocol.io/docs/getting-started/intro) is a standard whose main purpose is to define conventions for how tool usage should be implemented.
+## Try out the server
 
-Some interesting aspects of LLM tool usage are
-- **instant integration**: by activating multiple tool servers, you make your chat bot an integration interface betwen them.
-- **flexibility and minimalism**: because the LLM handles the inputs and outputs of the tool usage, it is very flexible often able to deliver high value with a small number of tools.
-- **reverse delegation of work to the LLM**: tools do work for LLMs, but also define expected input in their documentation, allowing them to "fool" the LLM to do the work when appropriate.
+1. Get [Claude desktop](https://claude.ai/download) and the [uv](https://docs.astral.sh/uv/) Python package manager.
 
-You saw an example of instant integration, of Gmail and notes-mcp, in the screenshot above.
-You will find examples of the next two points below.
-
-## Implementation
-The server implements the operations read, write, glob, mkdir, rm, rmdir and search.
-Most of them are very simple, here is mkdir:
-```Python
-@mcp.tool()
-def mkdir(path: str) -> str:
-    """Create a directory."""
-    (root_dir / path).mkdir(parents=True, exist_ok=True)
-    return f"Directory created: {path}"
-```
-
-### Q: shouldn't there be an operation for moving files?
-A: there could be, but it is not needed, because the LLM is flexible enough to figure out the workaround (read -> write -> delete).
-
-<img src="images/move-attendance-list.png" width="85%">
-
-This is a small example of how tool server implementation lends itself to *minimalism* - you typically don't have to implement every conceived tool to achieve tangible value within your business context!
-
-### Q: where is the code for converting text to markdown and YAML?
-A: the server contains no code for creating YAML or markdown content, but *reverse delegates* this to the LLM.
-All that is needed for the LLM to know what to do are the words "YAML" and "markdown" in the argument names:
-```Python
-@mcp.tool()
-def write(path: str, yaml_frontmatter: str, markdown_content: str) ...
-```
-Delegating text formatting work to the LLM is appropriate because LLMs, while unreliable for many things, excel at syntax and formatting.
-These argument names exemplify how the function documentation (including signature) effectively works as an LLM prompt.
-The prompt can be much more elaborate - think data classes/contracts!
-
-## Quickstart
-
-1. Get [Claude desktop](https://claude.ai/download).
-
-2. Put this in your `claude_desktop_config.json`, with an updated path to an existing folder called "my-notes".
+2. Put this in the `claude_desktop_config.json` file of your Claude installation, with an updated path to an existing folder called "my-notes":
 ```json
 {
   "mcpServers": {
     "my-notes": {
       "command": "uvx",
-      "args": ["notes-mcp", "/home/me/path/to/my-notes"]
+      "args": ["notes-mcp", "C:\\Users\\me\\path\\to\\my-notes"]
     }
   }
 }
@@ -74,4 +37,73 @@ The prompt can be much more elaborate - think data classes/contracts!
 
 5. Did your LLM hallucinate? Then open the note in your favourite editor and correct it. Work collaboratively!
 
-Supported systems: developed and tested on Linux. It may work directly on Windows - if not, the workaround is to use `"command": "docker"` or `"command": "wsl"` and put an adapted version of the `uvx` command in `"args"`.
+## Implementation
+The server is built with [FastMCP](https://gofastmcp.com/) and implements the operations read, write, glob, mkdir, rm, rmdir and search.
+Most of them are very simple, here is mkdir:
+```Python
+@mcp.tool()
+def mkdir(path: str) -> str:
+    """Create a directory."""
+    (root_dir / path).mkdir(parents=True, exist_ok=True)
+    return f"Directory created: {path}"
+```
+
+## Some cool aspects of LLM tool usage implementation
+TODO rephrase these subsections
+
+### Activating multiple tool servers is a means of instant integration
+By activating multiple tool servers, you make your chatbot an integration interface between them.
+Above, you saw one example involving Gmail inbox parsing and another involving web fetch.
+Some wild possibilities emerge if you consider the range of available MCP servers out there.
+Try out what can be done with the [Playwright MCP](https://github.com/microsoft/playwright-mcp) for automating web browsing, for example.
+Have it parse some web pages you're interested in and save the results with Notes MCP :).
+
+### The flexibility provided by the LLM let's you implement less
+With the LLM responsible for figuring out the details of which tools to invoke and how, the chatbot becomes a very flexible UI.
+This often let's us be minimalistic about the set of tools that we implement.
+There is an example above: you may have noticed that while operations for reading, writing and deletion were listed, there is none for moving or renaming.
+This is deliberately omitted from the server because the LLM can figure out the workaround (read -> write -> delete) easily enough:
+
+<img src="images/move-attendance-list.png" width="85%">
+
+Don't jump straight to implementing every conceivable tool, but think about which ones are necessary to achieve value!
+
+### Tools can reverse delegate work to the LLM through their documentation
+While the standard principle is that the LLM invokes tools to have work done, tools can also "fool" the LLM to do work upfront, using documentation.
+Example: if you study notes_mcp.py, you will find that there is no code in there for converting text to YAML (or markdown).
+This is instead delegated to the LLM by prompting it for already formatted YAML and markdown - all that is needed are the words "YAML" and "markdown" in the argument names:
+```Python
+@mcp.tool()
+def write(path: str, yaml_frontmatter: str, markdown_content: str) ...
+```
+Delegating text formatting work to the LLM is appropriate because LLMs, while unreliable for many things, excel at syntax and formatting.
+This particular case of reverse delegation is a small example of something that can be much more elaborate.
+Typical chat LLMs will, for example, effectively and correctly populate large JSON strings as long as a template is included in the docstring.
+
+## Experiment with the server locally
+
+1. Clone this repo.
+
+2. Modify your `claude_desktop_config.json` to include this:
+```json
+{
+  "mcpServers": {
+
+    ... other mcp servers go here ...
+
+    "my-notes-local": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "C:\\Users\\me\\path\\to\\notes-mcp",
+        "notes-mcp",
+        "C:\\Users\\me\\path\\to\\my-notes"
+      ]
+    }
+
+  }
+}
+```
+
+3. Modify something in the code, then restart Claude desktop to try out the changes.
