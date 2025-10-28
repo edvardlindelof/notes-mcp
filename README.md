@@ -5,8 +5,8 @@ Content files, *notes*, are stored as markdown files with YAML frontmatter, a fo
 Having metadata associated with the notes is useful for various things, such as timestamping and searchability.
 
 I use the server as
-1. a means to improve my own own productivity, through management of blog content, general notes and other things.
-2. a demo project, for showing and reasoning about the capabilities of LLM tool usage.
+- a means to improve my own own productivity, through management of blog content, general notes and other things.
+- a demo project, for showing and reasoning about the capabilities of LLM tool usage.
 
 ## Tool usage and model context protocol (MCP)
 *Tool usage* is the concept of having an LLM invoke software functions when they receive input that warrants it.
@@ -35,7 +35,7 @@ Here is an example of the present MCP server in action, in conjunction with an o
 
 4. Tell Claude "github.com/edvardlindelof/notes-mcp seems like an awesome package, check it out and save a small TODO about sharing it with others in my notes".
 
-5. Did your LLM hallucinate? Then open the note in your favourite editor and correct it. Work collaboratively!
+5. Did your LLM hallucinate? Then open the note in your favorite editor and correct it. Work collaboratively!
 
 ## Implementation
 The server is built with [FastMCP](https://gofastmcp.com/) and implements the operations read, write, glob, mkdir, rm, rmdir and search.
@@ -49,7 +49,7 @@ def mkdir(path: str) -> str:
 ```
 
 ## Some cool aspects of LLM tool usage implementation
-TODO rephrase these subsections
+Here are some things about LLM tool usage implementation that I find particularly powerful or fascinating!
 
 ### Activating multiple tool servers is a means of instant integration
 By activating multiple tool servers, you make your chatbot an integration interface between them.
@@ -58,9 +58,9 @@ Some wild possibilities emerge if you consider the range of available MCP server
 Try out what can be done with the [Playwright MCP](https://github.com/microsoft/playwright-mcp) for automating web browsing, for example.
 Have it parse some web pages you're interested in and save the results with Notes MCP :).
 
-### The flexibility provided by the LLM let's you implement less
+### The flexibility provided by the LLM lets you implement less
 With the LLM responsible for figuring out the details of which tools to invoke and how, the chatbot becomes a very flexible UI.
-This often let's us be minimalistic about the set of tools that we implement.
+This often lets us be minimalistic about the set of tools that we implement.
 There is an example above: you may have noticed that while operations for reading, writing and deletion were listed, there is none for moving or renaming.
 This is deliberately omitted from the server because the LLM can figure out the workaround (read -> write -> delete) easily enough:
 
@@ -89,7 +89,7 @@ Typical chat LLMs will, for example, effectively and correctly populate large JS
 {
   "mcpServers": {
 
-    ... other mcp servers go here ...
+    // ... other mcp servers go here ...
 
     "my-notes-local": {
       "command": "uv",
