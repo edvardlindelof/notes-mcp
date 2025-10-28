@@ -19,7 +19,7 @@ Here is an example of the present MCP server in action, in conjunction with an o
 
 1. Get [Claude desktop](https://claude.ai/download) and the [uv](https://docs.astral.sh/uv/) Python package manager.
 
-2. Put this in the `claude_desktop_config.json` file of your Claude installation, with an updated path to an existing folder called "my-notes":
+2. Put this in the `claude_desktop_config.json` file of your Claude installation (with an updated path to an existing folder called "my-notes"):
 ```json
 {
   "mcpServers": {
